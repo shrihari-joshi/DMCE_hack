@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './login.css';
 import SignUpForm from '../Register/register';
+import { useNavigate } from 'react-router-dom';
+
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isExpanded, setIsExpanded] = useState(true);
-  const [check, setCheck] = useState(0);
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -18,35 +20,29 @@ function LoginForm() {
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
-    setCheck((prevCheck) => prevCheck === 0 ? 1 : 0);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-  
+
     try {
-      const response = await axios.get(`http://localhost:8000/login-user?username=${username}&password=${password}`, formData, {
+      const response = await axios.get(`http://localhost:8000/login-user?username=${username}&password=${password}`, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json',
         }
       });
-      const currUser = localStorage.setItem('user', username);
-      console.log(response);
-      console.log('Username:', username);
-      console.log('Password:', password);
-  
-      // Clear input fields after successful submission
-      setUsername('');
-      setPassword('');
+      
+      console.log(response.data); // Assuming the response contains user data
+
+      // Store user data in localStorage if needed
+      localStorage.setItem('user', JSON.stringify(response.data));
+
+      // Navigate to the lobby page
+      navigate('/lobby');
     } catch (error) {
       console.error('Error:', error.response.data);
     }
   };
-  
 
   return (
     <div className='wrapper'>
@@ -73,7 +69,6 @@ function LoginForm() {
             required
             placeholder='Password'
             className="input-field"
-
           />
           <button type="submit" className="login-btn">Submit</button>
         </form>
@@ -81,7 +76,6 @@ function LoginForm() {
       <div className={`call-text ${isExpanded ? 'show-hide' : ''}`}>
         {!isExpanded && <SignUpForm />}
       </div>
-
     </div>
   );
 }

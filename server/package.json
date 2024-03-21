@@ -10,6 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.19.1",
+    "mongodb": "^6.5.0",
+    "mongoos": "^0.0.1-security",
+    "mongoose": "^8.2.2",
     "nodemon": "^2.0.22",
     "socket.io": "^4.6.1"
   }

@@ -2,13 +2,14 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 exports.loginUser = async (req, res) => {
-  const { username, password } = req.body;
-
+    const username = req.query.username
+    const password = req.query.password
+    
   try {
     const user = await User.findOne({ username }).exec();
 
     if (!user) {
-      console.log(`User with username ${username} not found`);
+      console.log(` ${username} not found`);
       return res.status(404).json({ error: 'User not found' });
     }
 
